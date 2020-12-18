@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .timesheet {
+            width: 720px;
+            height: 292px;
+            margin: 0 auto
+        }
+        
+        .timesheet {
+            border-top: 1px solid rgba(250, 250, 250, 0.5);
+            background-color: #333;
+            position: relative
+        }
+        
+        .timesheet.color-scheme-default .bubble-default {
+            background-color: RGBA(252, 70, 74, 1)
+        }
+        
+        .timesheet.color-scheme-default .bubble-lorem {
+            background-color: RGBA(154, 202, 39, 1)
+        }
+        
+        .timesheet.color-scheme-default .bubble-ipsum {
+            background-color: RGBA(60, 182, 227, 1)
+        }
+        
+        .timesheet.color-scheme-default .bubble-dolor {
+            background-color: RGBA(244, 207, 48, 1)
+        }
+        
+        .timesheet.color-scheme-default .bubble-sit {
+            background-color: RGBA(169, 105, 202, 1)
+        }
+        
+        .timesheet.color-scheme-alternative .bubble-default {
+            background-color: #f3552e
+        }
+        
+        .timesheet.color-scheme-alternative .bubble-lorem {
+            background-color: #88c33a
+        }
+        
+        .timesheet.color-scheme-alternative .bubble-ipsum {
+            background-color: #436ae0
+        }
+        
+        .timesheet.color-scheme-alternative .bubble-dolor {
+            background-color: #f4d234
+        }
+        
+        .timesheet.color-scheme-alternative .bubble-sit {
+            background-color: #707d86
+        }
+        
+        .timesheet .scale {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            float: left
+        }
+        
+        .timesheet .scale section {
+            float: left;
+            width: 59px;
+            text-align: center;
+            color: rgba(250, 250, 250, 0.8);
+            font-family: "Signika Negative";
+            font-size: 13px;
+            line-height: 24px;
+            font-weight: lighter;
+            border-left: 1px dashed rgba(250, 250, 250, 0.2);
+            height: 100%
+        }
+        
+        .timesheet .data {
+            margin: 28px 0 0 0;
+            padding: 0;
+            text-align: left;
+            list-style-type: none;
+            color: rgba(250, 250, 250, 0.8);
+            font-family: "Signika Negative";
+            font-size: 13px;
+            overflow: hidden
+        }
+        
+        .timesheet .data li {
+            margin: 0 0 3px 0;
+            line-height: 22px;
+            height: 21px;
+            display: block;
+            clear: both;
+            position: relative;
+            white-space: nowrap
+        }
+        
+        .timesheet .data li:hover .bubble {
+            opacity: 1
+        }
+        
+        .timesheet .data li .date {
+            color: #b5b5b5;
+            font-size: 14px
+        }
+        
+        .timesheet .data li .label {
+            font-weight: lighter;
+            font-size: 14px;
+            padding-left: 5px;
+            line-height: 21px;
+            color: #979796;
+            white-space: nowrap
+        }
+        
+        .timesheet .data li .bubble {
+            width: 24px;
+            height: 7px;
+            display: block;
+            float: left;
+            position: relative;
+            top: 7px;
+            border-radius: 4px;
+            margin: 0 10px 0 0;
+            opacity: 0.7
+        }
+        
+        #timesheet-alternative {
+            background-color: RGBA(247, 247, 247, 1);
+            border-radius: 5px
+        }
+        
+        #timesheet-alternative section {
+            color: RGBA(63, 68, 72, 1);
+            border-left: 1px dashed RGBA(63, 68, 72, 0.2)
+        }
+        
+        #timesheet-alternative section:first-child {
+            border-left: 1px dashed transparent
+        }
+        
+        #timesheet-alternative .date {
+            display: none
+        }
+        
+        #timesheet-alternative .bubble {
+            margin-right: 7px
+        }
+        
+        #timesheet-alternative .label {
+            padding-left: 0px;
+            color: RGBA(48, 48, 48, 1)
+        }
+    </style>
+    <script>
+        ! function() {
+            "use strict";
+            var Bubble = function(wMonth, min, start, end) {
+                this.min = min, this.start = start, this.end = end, this.widthMonth = wMonth
+            };
+            Bubble.prototype.formatMonth = function(num) {
+                return num = parseInt(num, 10), num >= 10 ? num : "0" + num
+            }, Bubble.prototype.getStartOffset = function() {
+                return this.widthMonth / 12 * (12 * (this.start.getFullYear() - this.min) + this.start.getMonth())
+            }, Bubble.prototype.getFullYears = function() {
+                return (this.end && this.end.getFullYear() || this.start.getFullYear()) - this.start.getFullYear()
+            }, Bubble.prototype.getMonths = function() {
+                var fullYears = this.getFullYears(),
+                    months = 0;
+                return this.end ? this.end.hasMonth ? (months += this.end.getMonth() + 1, months += 12 - (this.start.hasMonth ? this.start.getMonth() : 0), months += 12 * (fullYears - 1)) : (months += 12 - (this.start.hasMonth ? this.start.getMonth() : 0), months += 12 * (fullYears - 1 > 0 ? fullYears - 1 : 0)) : months += this.start.hasMonth ? 1 : 12, months
+            }, Bubble.prototype.getWidth = function() {
+                return this.widthMonth / 12 * this.getMonths()
+            }, Bubble.prototype.getDateLabel = function() {
+                return [(this.start.hasMonth ? this.formatMonth(this.start.getMonth() + 1) + "/" : "") + this.start.getFullYear(), this.end ? "-" + ((this.end.hasMonth ? this.formatMonth(this.end.getMonth() + 1) + "/" : "") + this.end.getFullYear()) : ""].join("")
+            }, window.TimesheetBubble = Bubble
+        }(),
+        function() {
+            "use strict";
+            var Timesheet = function(container, min, max, data) {
+                this.data = [], this.year = {
+                    min: min,
+                    max: max
+                }, this.parse(data || []), "undefined" != typeof document && (this.container = "string" == typeof container ? document.querySelector("#" + container) : container, this.drawSections(), this.insertData())
+            };
+            Timesheet.prototype.insertData = function() {
+                for (var html = [], widthMonth = this.container.querySelector(".scale section").offsetWidth, n = 0, m = this.data.length; m > n; n++) {
+                    var cur = this.data[n],
+                        bubble = new TimesheetBubble(widthMonth, this.year.min, cur.start, cur.end),
+                        line = ['<span style="margin-left: ' + bubble.getStartOffset() + "px; width: " + bubble.getWidth() + 'px;" class="bubble bubble-' + (cur.type || "default") + '" data-duration="' + (cur.end ? Math.round((cur.end - cur.start) / 1e3 / 60 / 60 / 24 / 39) : "") + '"></span>', '<span class="date">' + bubble.getDateLabel() + "</span> ", '<span class="label">' + cur.label + "</span>"].join("");
+                    html.push("<li>" + line + "</li>")
+                }
+                this.container.innerHTML += '<ul class="data">' + html.join("") + "</ul>"
+            }, Timesheet.prototype.drawSections = function() {
+                for (var html = [], c = this.year.min; c <= this.year.max; c++) html.push("<section>" + c + "</section>");
+                this.container.className = "timesheet color-scheme-default", this.container.innerHTML = '<div class="scale">' + html.join("") + "</div>"
+            }, Timesheet.prototype.parseDate = function(date) {
+                return -1 === date.indexOf("/") ? (date = new Date(parseInt(date, 10), 0, 1), date.hasMonth = !1) : (date = date.split("/"), date = new Date(parseInt(date[1], 10), parseInt(date[0], 10) - 1, 1), date.hasMonth = !0), date
+            }, Timesheet.prototype.parse = function(data) {
+                for (var n = 0, m = data.length; m > n; n++) {
+                    var beg = this.parseDate(data[n][0]),
+                        end = 4 === data[n].length ? this.parseDate(data[n][1]) : null,
+                        lbl = 4 === data[n].length ? data[n][2] : data[n][1],
+                        cat = data[n][3] || "default";
+                    beg.getFullYear() < this.year.min && (this.year.min = beg.getFullYear()), end && end.getFullYear() > this.year.max ? this.year.max = end.getFullYear() : beg.getFullYear() > this.year.max && (this.year.max = beg.getFullYear()), this.data.push({
+                        start: beg,
+                        end: end,
+                        label: lbl,
+                        type: cat
+                    })
+                }
+            }, window.Timesheet = Timesheet
+        }();
+    </script>
+</head>
+
+<body>
+    <div id="timesheet"></div>
+    <!-- JavaScript -->
+    <script>
+        new Timesheet('timesheet', 2000, 2018, [
+            ['1998', '09/2018', 'A freaking awesome time', 'lorem'],
+            ['06/2002', '09/2003', 'Some great memories', 'ipsum'],
+            ['2003', 'Had very bad luck'],
+            ['10/2003', '2006', 'At least had fun', 'dolor'],
+            ['02/2005', '05/2006', 'Enjoyed those times as well', 'ipsum'],
+            ['07/2005', '09/2005', 'Bad luck again', 'default'],
+            ['10/2005', '2008', 'For a long time nothing happened', 'dolor'],
+            ['01/2008', '05/2009', 'LOST Season #4', 'lorem'],
+            ['01/2009', '05/2009', 'LOST Season #4', 'lorem'],
+            ['02/2010', '05/2010', 'LOST Season #5', 'lorem'],
+            ['09/2008', '06/2020', 'FRINGE #1 & #2', 'ipsum']
+        ]);
+    </script>
+</body>
+
+</html>

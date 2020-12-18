@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Sheet Minute - Viniplas</title>
+    <style>
+        .div-box {
+            margin: 0 auto;
+            background-color: rgb(194, 201, 153);
+            padding: 0px;
+            width: 960px;
+            border: 1px solid;
+            position: relative;
+        }
+        
+        .div-box-coluna {
+            background-color: #999;
+            border-color: white;
+            display: inline-block;
+            width: 38px;
+            height: 50px;
+            padding: 0px;
+            text-align: center;
+            border: 1px solid;
+        }
+        
+        .div-linha {
+            position: relative;
+            background-color: yellow;
+            height: 20px;
+            border: none;
+            width: 100%;
+            padding-top: 5px;
+        }
+        
+        .detalhe_prod {
+            background-color: green;
+            position: fixed;
+            border: none;
+            height: 10px;
+        }
+        
+        #op1 {
+            width: 60px;
+            margin-left: 480px;
+        }
+        
+        #op2 {
+            width: 60px;
+            margin-left: 0px;
+        }
+        
+        .detalhe_stop {
+            background-color: orange;
+            opacity: 0.8;
+            border: none;
+            position: fixed;
+            margin-left: 10px;
+            position: fixed;
+            border-radius: 10px;
+            width: 160px;
+            height: 10px;
+        }
+        
+        #parada1 {
+            width: 120px;
+            margin-left: 0px;
+        }
+    </style>
+    <script>
+        function montar_div_box() {
+            var body = document.getElementById('timesheet');
+            var div_box = document.createElement('div')
+            div_box.setAttribute('class', 'div-box')
+            div_box.id = 'div-box'
+            var div_scale = document.createElement('div')
+            div_scale.setAttribute('class', 'div-scale')
+            for (var i = 0; i <= 23; i++) {
+                var div_coluna = document.createElement('section');
+                div_coluna.setAttribute('class', 'div-box-coluna')
+                div_coluna.setAttribute('data-minute', i)
+                div_coluna.innerHTML = i;
+                div_scale.appendChild(div_coluna);
+            }
+            div_box.appendChild(div_scale)
+            body.appendChild(div_box);
+
+            var div_box = document.getElementById('div-box');
+            for (i = 0; i < 1; i++) {
+                var div_linha = document.createElement('div');
+                div_linha.setAttribute('class', 'div-linha');
+
+                var detalhe = document.createElement('div')
+                detalhe.setAttribute('class', 'detalhe_prod')
+                detalhe.id = "op1"
+                div_linha.appendChild(detalhe)
+
+                var detalhe = document.createElement('div')
+                detalhe.setAttribute('class', 'detalhe_prod')
+                detalhe.id = "op2"
+                div_linha.appendChild(detalhe)
+
+                var detalhe = document.createElement('div')
+                detalhe.setAttribute('class', 'detalhe_stop')
+                detalhe.id = "parada1"
+                div_linha.appendChild(detalhe)
+
+                div_box.appendChild(div_linha)
+            }
+        }
+    </script>
+</head>
+
+<body id='timesheet' class='timesheet'>
+    <script>
+        montar_div_box()
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Sheet Minute - Viniplas</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <style>
+        h1 {
+            position: relative;
+            display: inline-block;
+            align: center;
+        }
+        td, th {
+            border: 1px solid
+        }
+        .table-sheet{
+            align: center;
+            display: block;
+            position: relative;
+            border: 1px solid;
+            border-color: #999;
+            background-color: #999 ;
+
+        }
+        .div-box {
+            margin: 0 auto;
+            background-color:red;
+            padding: 0px;
+            width: 960px;
+            border: 1px solid;
+            position: relative;
+        }
+
+        .div-box-coluna {
+            background-color: #999;
+            border-color: white;
+            display: inline-block;
+            width: 38px;
+            height: 50px;
+            padding: 0px;
+            text-align: center;
+            border: 1px solid;
+        }
+
+        .div-linha {
+            position: relative;
+            background-color: yellow;
+            height: 20px;
+            border: 1px solid;
+            width: 100%;
+            padding-top: 5px;
+        }
+        .div-table {
+            background-color: #9d9d9d;
+            border: 1px solid;
+            padding-top: 5px;
+            width: 960px;
+            margin: 0 auto;
+            font-size:12px;
+        }
+
+        .detalhe_prod {
+            background-color: green;
+            opacity: 0.8;
+            position: fixed;
+            border: none;
+            height: 10px;
+        }
+
+        .detalhe_stop {
+            background-color: orange;
+            opacity: 0.8;
+            position: fixed;
+            margin-top: 10px;
+            height: 10px;
+        }
+
+        .teste {
+            background-color: red;
+            width: 100px;
+            height: 100px;
+            margin-left: 100px;
+            position: fixed;
+        }
+    </style>
+    <script>
+        function montar_div_box() {
+            var body = document.getElementById('timesheet');
+            var div_box = document.createElement('div')
+            div_box.setAttribute('class', 'div-box')
+            div_box.id = 'div-box'
+            var div_scale = document.createElement('div')
+            div_scale.setAttribute('class', 'div-scale')
+            for (var i = 0; i <= 23; i++) {
+                var div_coluna = document.createElement('section');
+                div_coluna.setAttribute('class', 'div-box-coluna')
+                div_coluna.setAttribute('data-minute', i)
+                div_coluna.innerHTML = i;
+                div_scale.appendChild(div_coluna);
+            }
+            div_box.appendChild(div_scale)
+
+            var tbody = document.createElement('tbody')
+
+            body.appendChild(div_box);
+            var div_box = document.getElementById('div-box');
+            $.get('http://localhost:3001/dados', {}).done((result) => {
+                console.log(result)
+                for (k in result) {
+                    const apontamentos = result[k].apontamentos
+                    const recurso = result[k].recurso
+                    console.log(recurso)
+                    var div_linha = document.createElement('div');
+                    div_linha.setAttribute('class', 'div-linha');
+
+                    for (kl in apontamentos) {
+                        const apontamento = apontamentos[kl]
+                        console.log(apontamento.tipo)
+                        var tr = document.createElement('tr')
+                        tr.innerHTML = '<td>'+apontamento.tipo+'</td>'
+                        tr.innerHTML += '<td>'+apontamento.op+'</td>'
+                        tr.innerHTML += '<td>'+apontamento.produto+'</td>'
+                        tr.innerHTML += '<td>'+apontamento.data_hora_ini +'</td>'
+                        tr.innerHTML += '<td>'+apontamento.data_hora_fim+'</td>'
+                        tr.innerHTML += '<td>'+apontamento.motivo+'</td>'
+                        tr.innerHTML += '<td>'+apontamento.duracao+'</td>'
+                        tbody.appendChild(tr)
+                        if (apontamento.tipo == 'PRODUCAO') {
+                            var detalhe = document.createElement('div')
+                            detalhe.setAttribute('class', 'detalhe_prod')
+                            detalhe.setAttribute('style', "width: " + apontamento.duracao + "px; margin-left: " + apontamento.minuto_inicial + "px")
+                            div_linha.appendChild(detalhe)
+                        }
+                        if (apontamento.tipo == 'PARADA') {
+                            var detalhe = document.createElement('div')
+                            detalhe.setAttribute('class', 'detalhe_stop')
+                            detalhe.setAttribute('style', "width: " + apontamento.duracao + "px; margin-left: " + apontamento.minuto_inicial + "px")
+                            div_linha.appendChild(detalhe)
+                        }
+                    }
+                    div_box.appendChild(div_linha)
+
+                }
+            })
+            var div_box = document.getElementById('div-box');
+            var div_table = document.createElement('div')
+            var table = document.createElement('table')
+            table.setAttribute('class', 'table-sheet')
+            var thead = document.createElement('thead')
+            var tr = document.createElement('tr')
+            var tbody = document.createElement('tbody')
+            tr.innerHTML = '<th>Tipo</th><th>OP</th><th>Produto</th><th>Inicio</th><th>Fim</th><th>Motivo</th><th>Duracao (min)</th>'
+            thead.appendChild(tr)
+            table.appendChild(thead)
+            table.appendChild(tbody)
+            div_table.appendChild(table)
+            div_table.setAttribute('class', 'div-table')
+            body.appendChild(div_table)
+        }
+    </script>
+</head>
+
+<body id='timesheet' class='timesheet'>
+    <h1>Time Sheet do dia - Extrusora</h1>
+    <script>
+        montar_div_box()
+    </script>
+</body>
+
+</html>
